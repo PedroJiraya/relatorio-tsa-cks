@@ -23,10 +23,11 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
       toast.info('Gerando PDF... Aguarde um momento.');
       
       const canvas = await html2canvas(reportRef.current, {
-        scale: 2,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        width: reportRef.current.scrollWidth,
+        height: reportRef.current.scrollHeight
       });
       
       const pdf = new jsPDF('p', 'mm', 'a4');
