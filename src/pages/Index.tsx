@@ -73,7 +73,9 @@ const Index = () => {
     correctiveDetails: {
       component: '',
       cause: '',
-      solution: ''
+      solution: '',
+      beforeImages: [],
+      afterImages: []
     }
   });
 

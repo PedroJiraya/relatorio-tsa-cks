@@ -7,6 +7,7 @@ import { ReportData } from '@/types/report';
 import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import ImageViewer from '@/components/ImageViewer';
 
 interface ReportPreviewProps {
   data: ReportData;
@@ -152,7 +153,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
                     {activity.beforeImages.length > 0 ? (
                       <div className="grid grid-cols-2 gap-2">
                         {activity.beforeImages.map((image, index) => (
-                          <img
+                          <ImageViewer
                             key={index}
                             src={image}
                             alt={`Antes ${index + 1}`}
@@ -171,7 +172,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
                     {activity.afterImages.length > 0 ? (
                       <div className="grid grid-cols-2 gap-2">
                         {activity.afterImages.map((image, index) => (
-                          <img
+                          <ImageViewer
                             key={index}
                             src={image}
                             alt={`Depois ${index + 1}`}
@@ -217,6 +218,53 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
               <div>
                 <strong>Solução:</strong> {data.correctiveDetails.solution}
               </div>
+
+              {/* Fotos da Manutenção Corretiva */}
+              {(data.correctiveDetails.beforeImages.length > 0 || data.correctiveDetails.afterImages.length > 0) && (
+                <div className="mt-4">
+                  <strong className="text-sm text-gray-700 block mb-3">Evidências Fotográficas:</strong>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <strong className="text-sm text-gray-700 block mb-2">Antes da Correção:</strong>
+                      {data.correctiveDetails.beforeImages.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-2">
+                          {data.correctiveDetails.beforeImages.map((image, index) => (
+                            <ImageViewer
+                              key={index}
+                              src={image}
+                              alt={`Problema ${index + 1}`}
+                              className="w-full h-24 object-cover border rounded"
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="w-full h-32 bg-gray-100 border rounded flex items-center justify-center text-gray-400 text-xs">
+                          Nenhuma imagem
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <strong className="text-sm text-gray-700 block mb-2">Depois da Correção:</strong>
+                      {data.correctiveDetails.afterImages.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-2">
+                          {data.correctiveDetails.afterImages.map((image, index) => (
+                            <ImageViewer
+                              key={index}
+                              src={image}
+                              alt={`Solução ${index + 1}`}
+                              className="w-full h-24 object-cover border rounded"
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="w-full h-32 bg-gray-100 border rounded flex items-center justify-center text-gray-400 text-xs">
+                          Nenhuma imagem
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

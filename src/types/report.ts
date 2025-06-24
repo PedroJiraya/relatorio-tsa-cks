@@ -1,3 +1,4 @@
+
 export interface Activity {
   id: string;
   title: string;
@@ -10,6 +11,8 @@ export interface CorrectiveDetails {
   component: string;
   cause: string;
   solution: string;
+  beforeImages: string[];
+  afterImages: string[];
 }
 
 export interface ReportData {

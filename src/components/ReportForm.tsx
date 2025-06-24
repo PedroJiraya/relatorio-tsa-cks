@@ -285,53 +285,90 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
             </div>
             
             {data.hasCorrective && (
-              <div className="grid grid-cols-1 gap-4 mt-4 p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
-                <div>
-                  <Label htmlFor="component">Componente Substituído</Label>
-                  <Input
-                    id="component"
-                    value={data.correctiveDetails.component}
-                    onChange={(e) => onChange({ 
-                      correctiveDetails: { 
-                        ...data.correctiveDetails, 
-                        component: e.target.value 
-                      }
-                    })}
-                    placeholder="Ex: Antena MEMS – Lado B"
-                    className="border-orange-200 focus:border-orange-500"
-                  />
+              <div className="space-y-6 mt-4 p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <Label htmlFor="component">Componente Substituído</Label>
+                    <Input
+                      id="component"
+                      value={data.correctiveDetails.component}
+                      onChange={(e) => onChange({ 
+                        correctiveDetails: { 
+                          ...data.correctiveDetails, 
+                          component: e.target.value 
+                        }
+                      })}
+                      placeholder="Ex: Antena MEMS – Lado B"
+                      className="border-orange-200 focus:border-orange-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="cause">Causa do Problema</Label>
+                    <Textarea
+                      id="cause"
+                      value={data.correctiveDetails.cause}
+                      onChange={(e) => onChange({ 
+                        correctiveDetails: { 
+                          ...data.correctiveDetails, 
+                          cause: e.target.value 
+                        }
+                      })}
+                      placeholder="Ex: Oxidação no conector"
+                      className="border-orange-200 focus:border-orange-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="solution">Solução Aplicada</Label>
+                    <Textarea
+                      id="solution"
+                      value={data.correctiveDetails.solution}
+                      onChange={(e) => onChange({ 
+                        correctiveDetails: { 
+                          ...data.correctiveDetails, 
+                          solution: e.target.value 
+                        }
+                      })}
+                      placeholder="Ex: Substituição da peça"
+                      className="border-orange-200 focus:border-orange-500"
+                    />
+                  </div>
                 </div>
-                
-                <div>
-                  <Label htmlFor="cause">Causa do Problema</Label>
-                  <Textarea
-                    id="cause"
-                    value={data.correctiveDetails.cause}
-                    onChange={(e) => onChange({ 
-                      correctiveDetails: { 
-                        ...data.correctiveDetails, 
-                        cause: e.target.value 
-                      }
-                    })}
-                    placeholder="Ex: Oxidação no conector"
-                    className="border-orange-200 focus:border-orange-500"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="solution">Solução Aplicada</Label>
-                  <Textarea
-                    id="solution"
-                    value={data.correctiveDetails.solution}
-                    onChange={(e) => onChange({ 
-                      correctiveDetails: { 
-                        ...data.correctiveDetails, 
-                        solution: e.target.value 
-                      }
-                    })}
-                    placeholder="Ex: Substituição da peça"
-                    className="border-orange-200 focus:border-orange-500"
-                  />
+
+                {/* Fotos da Manutenção Corretiva */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  <div>
+                    <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                      Fotos - Antes da Correção
+                    </Label>
+                    <MultiImageUpload
+                      images={data.correctiveDetails.beforeImages}
+                      onImagesChange={(images) => onChange({ 
+                        correctiveDetails: { 
+                          ...data.correctiveDetails, 
+                          beforeImages: images 
+                        }
+                      })}
+                      placeholder="Carregar fotos do problema"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                      Fotos - Depois da Correção
+                    </Label>
+                    <MultiImageUpload
+                      images={data.correctiveDetails.afterImages}
+                      onImagesChange={(images) => onChange({ 
+                        correctiveDetails: { 
+                          ...data.correctiveDetails, 
+                          afterImages: images 
+                        }
+                      })}
+                      placeholder="Carregar fotos da solução"
+                    />
+                  </div>
                 </div>
               </div>
             )}
