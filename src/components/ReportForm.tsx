@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -116,12 +115,13 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
             <div>
               <Label htmlFor="technicians" className="flex items-center space-x-2 mb-2">
                 <Users className="h-4 w-4" />
-                <span>Técnicos Responsáveis</span>
+                <span>Técnicos Executantes</span>
               </Label>
               <Input
                 id="technicians"
                 value={data.technicians}
                 onChange={(e) => onChange({ technicians: e.target.value })}
+                placeholder="Ex: João Silva, Maria Santos"
                 className="border-gray-200 focus:border-blue-500"
               />
             </div>

@@ -1,4 +1,3 @@
-
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -107,7 +106,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
           </h3>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <strong>Técnicos Responsáveis:</strong> {data.technicians}
+              <strong>Técnicos Executantes:</strong> {data.technicians}
             </div>
             <div>
               <strong>Turma:</strong> {data.team}
@@ -222,16 +221,16 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
           )}
         </div>
 
-        {/* Assinaturas */}
+        {/* Assinaturas - Apenas Técnicos */}
         <div className="mt-12 pt-8 border-t border-gray-300">
           <div className="grid grid-cols-2 gap-8">
             <div className="text-center">
               <div className="border-b border-gray-400 mb-2 pb-8"></div>
-              <p className="text-sm font-medium">Técnico Responsável</p>
+              <p className="text-sm font-medium">Técnico Executante 1</p>
             </div>
             <div className="text-center">
               <div className="border-b border-gray-400 mb-2 pb-8"></div>
-              <p className="text-sm font-medium">Supervisor</p>
+              <p className="text-sm font-medium">Técnico Executante 2</p>
             </div>
           </div>
         </div>
