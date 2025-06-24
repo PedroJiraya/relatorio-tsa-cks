@@ -1,4 +1,3 @@
-
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,7 +29,6 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
         backgroundColor: '#ffffff'
       });
       
-      const imgData = canvas.getImageData(0, 0, canvas.width, canvas.height);
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgWidth = 210;
       const pageHeight = 295;
