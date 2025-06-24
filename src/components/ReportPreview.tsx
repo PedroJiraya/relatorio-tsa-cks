@@ -1,3 +1,4 @@
+
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,7 +26,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
       const canvas = await html2canvas(reportRef.current, {
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#ffffff',
+        background: '#ffffff',
         width: reportRef.current.scrollWidth,
         height: reportRef.current.scrollHeight
       });
