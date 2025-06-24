@@ -32,8 +32,8 @@ const Index = () => {
           'Verificação das bases A e B',
           'Limpeza dos conectores'
         ],
-        beforeImage: null,
-        afterImage: null
+        beforeImages: [],
+        afterImages: []
       },
       {
         id: 'cas',
@@ -43,8 +43,8 @@ const Index = () => {
           'Teste de funcionalidade',
           'Calibração dos parâmetros'
         ],
-        beforeImage: null,
-        afterImage: null
+        beforeImages: [],
+        afterImages: []
       },
       {
         id: 'despacho',
@@ -54,8 +54,8 @@ const Index = () => {
           'Teste de comunicação',
           'Atualização de software'
         ],
-        beforeImage: null,
-        afterImage: null
+        beforeImages: [],
+        afterImages: []
       },
       {
         id: 'optlert',
@@ -65,8 +65,8 @@ const Index = () => {
           'Teste de alertas',
           'Configuração de parâmetros'
         ],
-        beforeImage: null,
-        afterImage: null
+        beforeImages: [],
+        afterImages: []
       }
     ],
     hasCorrective: false,

@@ -1,10 +1,9 @@
-
 export interface Activity {
   id: string;
   title: string;
   tasks: string[];
-  beforeImage: string | null;
-  afterImage: string | null;
+  beforeImages: string[];
+  afterImages: string[];
 }
 
 export interface CorrectiveDetails {

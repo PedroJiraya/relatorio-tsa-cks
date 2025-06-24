@@ -146,16 +146,21 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
                 </ul>
               </div>
 
-              {(activity.beforeImage || activity.afterImage) && (
+              {(activity.beforeImages.length > 0 || activity.afterImages.length > 0) && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <strong className="text-sm text-gray-700 block mb-2">Antes:</strong>
-                    {activity.beforeImage ? (
-                      <img
-                        src={activity.beforeImage}
-                        alt="Antes"
-                        className="w-full h-32 object-cover border rounded"
-                      />
+                    {activity.beforeImages.length > 0 ? (
+                      <div className="grid grid-cols-2 gap-2">
+                        {activity.beforeImages.map((image, index) => (
+                          <img
+                            key={index}
+                            src={image}
+                            alt={`Antes ${index + 1}`}
+                            className="w-full h-24 object-cover border rounded"
+                          />
+                        ))}
+                      </div>
                     ) : (
                       <div className="w-full h-32 bg-gray-100 border rounded flex items-center justify-center text-gray-400 text-xs">
                         Nenhuma imagem
@@ -164,12 +169,17 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
                   </div>
                   <div>
                     <strong className="text-sm text-gray-700 block mb-2">Depois:</strong>
-                    {activity.afterImage ? (
-                      <img
-                        src={activity.afterImage}
-                        alt="Depois"
-                        className="w-full h-32 object-cover border rounded"
-                      />
+                    {activity.afterImages.length > 0 ? (
+                      <div className="grid grid-cols-2 gap-2">
+                        {activity.afterImages.map((image, index) => (
+                          <img
+                            key={index}
+                            src={image}
+                            alt={`Depois ${index + 1}`}
+                            className="w-full h-24 object-cover border rounded"
+                          />
+                        ))}
+                      </div>
                     ) : (
                       <div className="w-full h-32 bg-gray-100 border rounded flex items-center justify-center text-gray-400 text-xs">
                         Nenhuma imagem

@@ -9,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Eye, Upload, X, Calendar, Clock, Users, MapPin } from 'lucide-react';
 import { ReportData, Activity } from '@/types/report';
-import ImageUpload from '@/components/ImageUpload';
+import MultiImageUpload from '@/components/MultiImageUpload';
 
 interface ReportFormProps {
   data: ReportData;
@@ -240,23 +240,23 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <Label className="text-sm font-medium text-gray-700 mb-3 block">
-                      Foto - Antes
+                      Fotos - Antes
                     </Label>
-                    <ImageUpload
-                      image={activity.beforeImage}
-                      onImageChange={(image) => handleActivityChange(activity.id, 'beforeImage', image)}
-                      placeholder="Carregar foto do antes"
+                    <MultiImageUpload
+                      images={activity.beforeImages}
+                      onImagesChange={(images) => handleActivityChange(activity.id, 'beforeImages', images)}
+                      placeholder="Carregar fotos do antes"
                     />
                   </div>
                   
                   <div>
                     <Label className="text-sm font-medium text-gray-700 mb-3 block">
-                      Foto - Depois
+                      Fotos - Depois
                     </Label>
-                    <ImageUpload
-                      image={activity.afterImage}
-                      onImageChange={(image) => handleActivityChange(activity.id, 'afterImage', image)}
-                      placeholder="Carregar foto do depois"
+                    <MultiImageUpload
+                      images={activity.afterImages}
+                      onImagesChange={(images) => handleActivityChange(activity.id, 'afterImages', images)}
+                      placeholder="Carregar fotos do depois"
                     />
                   </div>
                 </div>
