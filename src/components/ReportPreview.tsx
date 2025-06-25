@@ -9,7 +9,6 @@ import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import ImageViewer from '@/components/ImageViewer';
-import DigitalSignature from '@/components/DigitalSignature';
 
 interface ReportPreviewProps {
   data: ReportData;
@@ -30,7 +29,8 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
         allowTaint: true,
         background: '#ffffff',
         width: reportRef.current.scrollWidth,
-        height: reportRef.current.scrollHeight
+        height: reportRef.current.scrollHeight,
+        scale: 2
       });
       
       const pdf = new jsPDF('p', 'mm', 'a4');
@@ -97,7 +97,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
       </div>
 
       {/* Preview do Relatório */}
-      <div ref={reportRef} className="bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
+      <div ref={reportRef} className="bg-white p-8 max-w-4xl mx-auto" style={{ boxShadow: 'none' }}>
         {/* Cabeçalho */}
         <div className="text-center border-b-2 border-blue-600 pb-6 mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -169,7 +169,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
                       {activity.beforeImages.length > 0 ? (
                         <div className="grid grid-cols-2 gap-2">
                           {activity.beforeImages.map((image, index) => (
-                            <ImageViewer
+                            <img
                               key={index}
                               src={image}
                               alt={`Antes ${index + 1}`}
@@ -188,7 +188,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
                       {activity.afterImages.length > 0 ? (
                         <div className="grid grid-cols-2 gap-2">
                           {activity.afterImages.map((image, index) => (
-                            <ImageViewer
+                            <img
                               key={index}
                               src={image}
                               alt={`Depois ${index + 1}`}
@@ -246,7 +246,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
                       {data.correctiveDetails.beforeImages.length > 0 ? (
                         <div className="grid grid-cols-2 gap-2">
                           {data.correctiveDetails.beforeImages.map((image, index) => (
-                            <ImageViewer
+                            <img
                               key={index}
                               src={image}
                               alt={`Problema ${index + 1}`}
@@ -265,7 +265,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
                       {data.correctiveDetails.afterImages.length > 0 ? (
                         <div className="grid grid-cols-2 gap-2">
                           {data.correctiveDetails.afterImages.map((image, index) => (
-                            <ImageViewer
+                            <img
                               key={index}
                               src={image}
                               alt={`Solução ${index + 1}`}
@@ -286,23 +286,19 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
           )}
         </div>
 
-        {/* Assinaturas Digitais */}
+        {/* Rodapé com nomes dos técnicos */}
         <div className="mt-12 pt-8 border-t border-gray-300">
-          <div className="grid grid-cols-2 gap-8">
-            <DigitalSignature 
-              name={tech1} 
-              title="Técnico Executante 1"
-            />
-            <DigitalSignature 
-              name={tech2} 
-              title="Técnico Executante 2"
-            />
+          <div className="text-center text-sm text-gray-700">
+            <p><strong>Técnicos Responsáveis:</strong></p>
+            <div className="mt-2 space-y-1">
+              {tech1 && <p>{tech1}</p>}
+              {tech2 && <p>{tech2}</p>}
+            </div>
           </div>
-        </div>
-
-        {/* Rodapé */}
-        <div className="mt-8 text-center text-xs text-gray-500">
-          <p>Relatório gerado automaticamente em {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}</p>
+          
+          <div className="mt-6 text-center text-xs text-gray-500">
+            <p>Relatório gerado automaticamente em {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}</p>
+          </div>
         </div>
       </div>
     </div>
