@@ -25,7 +25,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
       id: 'despacho',
       title: 'DESPACHO',
       tasks: [
-        'Verificados os conectores da Swith Turck.',
+        'Verificado conectores do Swith.',
         'Verificado conector de alimentação do PTX e Cabo da antena GPS.'
       ]
     },
@@ -33,7 +33,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
       id: 'optalert',
       title: 'OPTALERT',
       tasks: [
-        'Avaliados: tablet, doc, trava cabo e conectores.',
+        'Avaliado: tablet, doc station, trava cabos e conectores.',
         'Verificado: alimentação e cabo de rede.'
       ]
     },
@@ -41,26 +41,26 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
       id: 'cftv',
       title: 'CFTV',
       tasks: [
-        'Verificada e realizada limpeza das câmeras: traseira, frontal, esquerda e direta.',
-        'Verificada tela plussee.'
+        'Verificado e realizado limpeza das câmeras: traseira, frontal, esquerda e direta.',
+        'Verificado tela plus see.'
       ]
     },
     {
       id: 'cas',
       title: 'CAS',
       tasks: [
-        'Avaliada IVU, Conectores dos cabos Wi-fi, GPS, V2V e Cabo da tela do CAS.',
-        'Verificado conector 24 pinos.',
-        'Testes nas antenas.'
+        'Avaliado IVU, Conectores dos cabos Wi-fi, GPS, V2V e Cabo da tela do CAS.',
+        'Avaliado antenas (gps, wifi e v2v) do mastro e conectores e feito teste',
+        'Verificado conector de 24 pinos.',
       ]
     },
     {
       id: 'mems',
       title: 'MEMS',
       tasks: [
-        'Avaliadas as antenas',
+        'Avaliado as antenas',
         'Realizado teste nos cabos A e B.',
-        'Verificadas as conexões Serial, Alimentação e Rede.',
+        'Verificado as conexões Serial, Alimentação e Rede.',
         'Limpeza do Módulo.'
       ]
     }
@@ -208,7 +208,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
                 id="technicians"
                 value={data.technicians}
                 onChange={(e) => onChange({ technicians: e.target.value })}
-                placeholder="Ex: João Silva, Maria Santos"
+                placeholder="Ex: Pedro Pinheiro, Claudiomar Sousa"
                 className="border-gray-200 focus:border-blue-500"
               />
             </div>
@@ -225,7 +225,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
             </div>
             
             <div>
-              <Label htmlFor="tague">TAGUE</Label>
+              <Label htmlFor="tague">TAG</Label>
               <Input
                 id="tague"
                 value={data.tague}

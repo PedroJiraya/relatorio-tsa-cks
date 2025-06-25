@@ -98,6 +98,9 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
       <div ref={reportRef} className="bg-white p-8 max-w-4xl mx-auto" style={{ boxShadow: 'none' }}>
         {/* Cabeçalho */}
         <div className="text-center border-b-2 border-blue-600 pb-6 mb-8">
+          <img
+            className='w-20 '
+          src="/TSALOGO.png" alt="" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             RELATÓRIO DE MANUTENÇÃO PREVENTIVA
           </h1>
@@ -122,7 +125,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
               <strong>Turma:</strong> {data.team || '_________________'}
             </div>
             <div>
-              <strong>TAGUE:</strong> {data.tague || '_________________'}
+              <strong>TAG:</strong> {data.tague || '_________________'}
             </div>
             <div>
               <strong>OM:</strong> {data.om || '_________________'}
