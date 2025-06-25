@@ -20,6 +20,52 @@ interface ReportFormProps {
 const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
   const [newComponentName, setNewComponentName] = useState('');
 
+  const defaultComponents = [
+    {
+      id: 'despacho',
+      title: 'DESPACHO',
+      tasks: [
+        'Verificados os conectores da Swith Turck.',
+        'Verificado conector de alimentação do PTX e Cabo da antena GPS.'
+      ]
+    },
+    {
+      id: 'optalert',
+      title: 'OPTALERT',
+      tasks: [
+        'Avaliados: tablet, doc, trava cabo e conectores.',
+        'Verificado: alimentação e cabo de rede.'
+      ]
+    },
+    {
+      id: 'cftv',
+      title: 'CFTV',
+      tasks: [
+        'Verificada e realizada limpeza das câmeras: traseira, frontal, esquerda e direta.',
+        'Verificada tela plussee.'
+      ]
+    },
+    {
+      id: 'cas',
+      title: 'CAS',
+      tasks: [
+        'Avaliada IVU, Conectores dos cabos Wi-fi, GPS, V2V e Cabo da tela do CAS.',
+        'Verificado conector 24 pinos.',
+        'Testes nas antenas.'
+      ]
+    },
+    {
+      id: 'mems',
+      title: 'MEMS',
+      tasks: [
+        'Avaliadas as antenas',
+        'Realizado teste nos cabos A e B.',
+        'Verificadas as conexões Serial, Alimentação e Rede.',
+        'Limpeza do Módulo.'
+      ]
+    }
+  ];
+
   const handleActivityChange = (activityId: string, field: string, value: any) => {
     const updatedActivities = data.activities.map(activity => 
       activity.id === activityId 
@@ -62,6 +108,22 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
         : activity
     );
     onChange({ activities: updatedActivities });
+  };
+
+  const addDefaultComponent = (defaultComponent: any) => {
+    // Verificar se o componente já existe
+    const exists = data.activities.some(activity => activity.id === defaultComponent.id);
+    if (exists) return;
+
+    const newActivity: Activity = {
+      id: defaultComponent.id,
+      title: defaultComponent.title,
+      tasks: [...defaultComponent.tasks],
+      beforeImages: [],
+      afterImages: []
+    };
+    
+    onChange({ activities: [...data.activities, newActivity] });
   };
 
   const addComponent = () => {
@@ -215,12 +277,41 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
         </CardContent>
       </Card>
 
-      {/* Gerenciamento de Componentes */}
+      {/* Componentes Padrão */}
+      <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+        <CardHeader className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-t-lg">
+          <CardTitle className="flex items-center space-x-2">
+            <Plus className="h-5 w-5" />
+            <span>Componentes Padrão</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            {defaultComponents.map((component) => {
+              const isAdded = data.activities.some(activity => activity.id === component.id);
+              return (
+                <Button
+                  key={component.id}
+                  onClick={() => addDefaultComponent(component)}
+                  disabled={isAdded}
+                  variant={isAdded ? "secondary" : "outline"}
+                  className={`text-sm ${isAdded ? 'opacity-50' : 'hover:bg-green-50'}`}
+                >
+                  {component.title}
+                  {isAdded && <X className="h-3 w-3 ml-1" />}
+                </Button>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Gerenciamento de Componentes Customizados */}
       <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
         <CardHeader className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-t-lg">
           <CardTitle className="flex items-center space-x-2">
             <Plus className="h-5 w-5" />
-            <span>Gerenciar Componentes</span>
+            <span>Componente Personalizado</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
@@ -228,13 +319,13 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
             <Input
               value={newComponentName}
               onChange={(e) => setNewComponentName(e.target.value)}
-              placeholder="Nome do novo componente (ex: MEMS, CAS, DESPACHO)"
+              placeholder="Nome do novo componente personalizado"
               className="flex-1"
               onKeyPress={(e) => e.key === 'Enter' && addComponent()}
             />
             <Button 
               onClick={addComponent}
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="bg-purple-600 hover:bg-purple-700 text-white"
             >
               <Plus className="h-4 w-4 mr-2" />
               Adicionar
