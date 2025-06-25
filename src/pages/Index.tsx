@@ -14,61 +14,16 @@ import { ReportData } from '@/types/report';
 
 const Index = () => {
   const [reportData, setReportData] = useState<ReportData>({
-    company: 'TSA',
+    company: '',
     date: new Date().toISOString().split('T')[0],
-    location: 'Oficina N5',
-    technicians: 'Marcos Sousa, Igor Gabriel',
-    team: 'C',
-    tague: 'CM 5226',
-    om: '202503360323',
-    startTime: '11:40',
-    endTime: '17:40',
-    activities: [
-      {
-        id: 'mems',
-        title: 'MEMS',
-        tasks: [
-          'Testes nas antenas e cabos',
-          'Verificação das bases A e B',
-          'Limpeza dos conectores'
-        ],
-        beforeImages: [],
-        afterImages: []
-      },
-      {
-        id: 'cas',
-        title: 'CAS',
-        tasks: [
-          'Verificação do sistema',
-          'Teste de funcionalidade',
-          'Calibração dos parâmetros'
-        ],
-        beforeImages: [],
-        afterImages: []
-      },
-      {
-        id: 'despacho',
-        title: 'DESPACHO',
-        tasks: [
-          'Verificação dos equipamentos',
-          'Teste de comunicação',
-          'Atualização de software'
-        ],
-        beforeImages: [],
-        afterImages: []
-      },
-      {
-        id: 'optlert',
-        title: 'OPTLERT',
-        tasks: [
-          'Verificação dos sensores',
-          'Teste de alertas',
-          'Configuração de parâmetros'
-        ],
-        beforeImages: [],
-        afterImages: []
-      }
-    ],
+    location: '',
+    technicians: '',
+    team: '',
+    tague: '',
+    om: '',
+    startTime: '',
+    endTime: '',
+    activities: [],
     hasCorrective: false,
     correctiveDetails: {
       component: '',

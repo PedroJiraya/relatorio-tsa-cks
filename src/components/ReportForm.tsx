@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { Eye, Upload, X, Calendar, Clock, Users, MapPin } from 'lucide-react';
+import { Eye, Upload, X, Calendar, Clock, Users, MapPin, Plus, Trash2 } from 'lucide-react';
 import { ReportData, Activity } from '@/types/report';
 import MultiImageUpload from '@/components/MultiImageUpload';
 
@@ -17,6 +18,8 @@ interface ReportFormProps {
 }
 
 const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
+  const [newComponentName, setNewComponentName] = useState('');
+
   const handleActivityChange = (activityId: string, field: string, value: any) => {
     const updatedActivities = data.activities.map(activity => 
       activity.id === activityId 
@@ -61,6 +64,26 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
     onChange({ activities: updatedActivities });
   };
 
+  const addComponent = () => {
+    if (!newComponentName.trim()) return;
+    
+    const newActivity: Activity = {
+      id: newComponentName.toLowerCase().replace(/\s+/g, '-'),
+      title: newComponentName.toUpperCase(),
+      tasks: [''],
+      beforeImages: [],
+      afterImages: []
+    };
+    
+    onChange({ activities: [...data.activities, newActivity] });
+    setNewComponentName('');
+  };
+
+  const removeComponent = (activityId: string) => {
+    const updatedActivities = data.activities.filter(activity => activity.id !== activityId);
+    onChange({ activities: updatedActivities });
+  };
+
   return (
     <div className="space-y-8">
       {/* Informações Básicas */}
@@ -81,6 +104,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
                 id="company"
                 value={data.company}
                 onChange={(e) => onChange({ company: e.target.value })}
+                placeholder="Ex: TSA"
                 className="border-gray-200 focus:border-blue-500"
               />
             </div>
@@ -108,6 +132,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
                 id="location"
                 value={data.location}
                 onChange={(e) => onChange({ location: e.target.value })}
+                placeholder="Ex: Oficina N5"
                 className="border-gray-200 focus:border-blue-500"
               />
             </div>
@@ -132,6 +157,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
                 id="team"
                 value={data.team}
                 onChange={(e) => onChange({ team: e.target.value })}
+                placeholder="Ex: C"
                 className="border-gray-200 focus:border-blue-500"
               />
             </div>
@@ -142,6 +168,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
                 id="tague"
                 value={data.tague}
                 onChange={(e) => onChange({ tague: e.target.value })}
+                placeholder="Ex: CM 5226"
                 className="border-gray-200 focus:border-blue-500"
               />
             </div>
@@ -152,6 +179,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
                 id="om"
                 value={data.om}
                 onChange={(e) => onChange({ om: e.target.value })}
+                placeholder="Ex: 202503360323"
                 className="border-gray-200 focus:border-blue-500"
               />
             </div>
@@ -187,84 +215,151 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
         </CardContent>
       </Card>
 
-      {/* Atividades */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
-          <Upload className="h-6 w-6" />
-          <span>Atividades Realizadas</span>
-        </h2>
-        
-        {data.activities.map((activity) => (
-          <Card key={activity.id} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-t-lg">
-              <CardTitle className="text-lg">{activity.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-sm font-medium text-gray-700 mb-3 block">
-                    Tarefas Realizadas
-                  </Label>
-                  <div className="space-y-2">
-                    {activity.tasks.map((task, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <Input
-                          value={task}
-                          onChange={(e) => handleTaskChange(activity.id, index, e.target.value)}
-                          placeholder="Descreva a tarefa realizada..."
-                          className="flex-1 border-gray-200 focus:border-blue-500"
-                        />
-                        {activity.tasks.length > 1 && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => removeTask(activity.id, index)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    ))}
+      {/* Gerenciamento de Componentes */}
+      <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+        <CardHeader className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-t-lg">
+          <CardTitle className="flex items-center space-x-2">
+            <Plus className="h-5 w-5" />
+            <span>Gerenciar Componentes</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="flex space-x-2 mb-4">
+            <Input
+              value={newComponentName}
+              onChange={(e) => setNewComponentName(e.target.value)}
+              placeholder="Nome do novo componente (ex: MEMS, CAS, DESPACHO)"
+              className="flex-1"
+              onKeyPress={(e) => e.key === 'Enter' && addComponent()}
+            />
+            <Button 
+              onClick={addComponent}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Adicionar
+            </Button>
+          </div>
+          
+          {data.activities.length > 0 && (
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-gray-700">
+                Componentes Adicionados:
+              </Label>
+              <div className="flex flex-wrap gap-2">
+                {data.activities.map((activity) => (
+                  <Badge 
+                    key={activity.id}
+                    variant="outline" 
+                    className="flex items-center space-x-2 px-3 py-1"
+                  >
+                    <span>{activity.title}</span>
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
-                      onClick={() => addTask(activity.id)}
-                      className="mt-2"
+                      onClick={() => removeComponent(activity.id)}
+                      className="h-4 w-4 p-0 text-red-600 hover:text-red-700"
                     >
-                      + Adicionar Tarefa
+                      <X className="h-3 w-3" />
                     </Button>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Atividades */}
+      {data.activities.length > 0 && (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
+            <Upload className="h-6 w-6" />
+            <span>Atividades Realizadas</span>
+          </h2>
+          
+          {data.activities.map((activity) => (
+            <Card key={activity.id} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-t-lg">
+                <CardTitle className="text-lg flex items-center justify-between">
+                  <span>{activity.title}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeComponent(activity.id)}
+                    className="text-white hover:text-red-200"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="space-y-4">
                   <div>
                     <Label className="text-sm font-medium text-gray-700 mb-3 block">
-                      Fotos - Antes
+                      Tarefas Realizadas
                     </Label>
-                    <MultiImageUpload
-                      images={activity.beforeImages}
-                      onImagesChange={(images) => handleActivityChange(activity.id, 'beforeImages', images)}
-                      placeholder="Carregar fotos do antes"
-                    />
+                    <div className="space-y-2">
+                      {activity.tasks.map((task, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <Input
+                            value={task}
+                            onChange={(e) => handleTaskChange(activity.id, index, e.target.value)}
+                            placeholder="Descreva a tarefa realizada..."
+                            className="flex-1 border-gray-200 focus:border-blue-500"
+                          />
+                          {activity.tasks.length > 1 && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => removeTask(activity.id, index)}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => addTask(activity.id)}
+                        className="mt-2"
+                      >
+                        + Adicionar Tarefa
+                      </Button>
+                    </div>
                   </div>
                   
-                  <div>
-                    <Label className="text-sm font-medium text-gray-700 mb-3 block">
-                      Fotos - Depois
-                    </Label>
-                    <MultiImageUpload
-                      images={activity.afterImages}
-                      onImagesChange={(images) => handleActivityChange(activity.id, 'afterImages', images)}
-                      placeholder="Carregar fotos do depois"
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                      <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                        Fotos - Antes
+                      </Label>
+                      <MultiImageUpload
+                        images={activity.beforeImages}
+                        onImagesChange={(images) => handleActivityChange(activity.id, 'beforeImages', images)}
+                        placeholder="Carregar fotos do antes"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                        Fotos - Depois
+                      </Label>
+                      <MultiImageUpload
+                        images={activity.afterImages}
+                        onImagesChange={(images) => handleActivityChange(activity.id, 'afterImages', images)}
+                        placeholder="Carregar fotos do depois"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {/* Manutenção Corretiva */}
       <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">

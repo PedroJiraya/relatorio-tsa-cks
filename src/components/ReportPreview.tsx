@@ -1,3 +1,4 @@
+
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +9,7 @@ import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import ImageViewer from '@/components/ImageViewer';
+import DigitalSignature from '@/components/DigitalSignature';
 
 interface ReportPreviewProps {
   data: ReportData;
@@ -48,7 +50,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
         heightLeft -= pageHeight;
       }
 
-      const filename = `relatorio_manutencao_${data.date}_${data.location.replace(/\s+/g, '_')}.pdf`;
+      const filename = `relatorio_manutencao_${data.date}_${data.location.replace(/\s+/g, '_') || 'local'}.pdf`;
       pdf.save(filename);
       
       toast.success('PDF gerado com sucesso!');
@@ -59,9 +61,18 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
   };
 
   const formatDate = (dateString: string) => {
+    if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('pt-BR');
   };
+
+  const getTechnicianNames = () => {
+    if (!data.technicians.trim()) return ['', ''];
+    const names = data.technicians.split(',').map(name => name.trim());
+    return [names[0] || '', names[1] || ''];
+  };
+
+  const [tech1, tech2] = getTechnicianNames();
 
   return (
     <div className="space-y-6">
@@ -94,9 +105,9 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
           </h1>
           <h2 className="text-xl text-blue-600 font-semibold">AUTOMAÇÃO</h2>
           <div className="mt-4 flex justify-center space-x-8 text-sm text-gray-600">
-            <span><strong>Empresa:</strong> {data.company}</span>
-            <span><strong>Data:</strong> {formatDate(data.date)}</span>
-            <span><strong>Local:</strong> {data.location}</span>
+            <span><strong>Empresa:</strong> {data.company || '_________________'}</span>
+            <span><strong>Data:</strong> {formatDate(data.date) || '_________________'}</span>
+            <span><strong>Local:</strong> {data.location || '_________________'}</span>
           </div>
         </div>
 
@@ -107,19 +118,19 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
           </h3>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <strong>Técnicos Executantes:</strong> {data.technicians}
+              <strong>Técnicos Executantes:</strong> {data.technicians || '_________________________________'}
             </div>
             <div>
-              <strong>Turma:</strong> {data.team}
+              <strong>Turma:</strong> {data.team || '_________________'}
             </div>
             <div>
-              <strong>TAGUE:</strong> {data.tague}
+              <strong>TAGUE:</strong> {data.tague || '_________________'}
             </div>
             <div>
-              <strong>OM:</strong> {data.om}
+              <strong>OM:</strong> {data.om || '_________________'}
             </div>
             <div>
-              <strong>Horário:</strong> Início: {data.startTime} | Término: {data.endTime}
+              <strong>Horário:</strong> Início: {data.startTime || '__:__'} | Término: {data.endTime || '__:__'}
             </div>
           </div>
         </div>
@@ -130,66 +141,72 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
             ATIVIDADES REALIZADAS
           </h3>
           
-          {data.activities.map((activity) => (
-            <div key={activity.id} className="mb-6 border border-gray-200 rounded-lg p-4">
-              <h4 className="text-md font-bold text-blue-600 mb-3">{activity.title}</h4>
-              
-              <div className="mb-4">
-                <strong className="text-sm text-gray-700">Tarefas:</strong>
-                <ul className="mt-2 space-y-1">
-                  {activity.tasks.filter(task => task.trim()).map((task, index) => (
-                    <li key={index} className="flex items-center space-x-2 text-sm">
-                      <Check className="h-4 w-4 text-green-600 flex-shrink-0" />
-                      <span>{task}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {(activity.beforeImages.length > 0 || activity.afterImages.length > 0) && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <strong className="text-sm text-gray-700 block mb-2">Antes:</strong>
-                    {activity.beforeImages.length > 0 ? (
-                      <div className="grid grid-cols-2 gap-2">
-                        {activity.beforeImages.map((image, index) => (
-                          <ImageViewer
-                            key={index}
-                            src={image}
-                            alt={`Antes ${index + 1}`}
-                            className="w-full h-24 object-cover border rounded"
-                          />
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="w-full h-32 bg-gray-100 border rounded flex items-center justify-center text-gray-400 text-xs">
-                        Nenhuma imagem
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <strong className="text-sm text-gray-700 block mb-2">Depois:</strong>
-                    {activity.afterImages.length > 0 ? (
-                      <div className="grid grid-cols-2 gap-2">
-                        {activity.afterImages.map((image, index) => (
-                          <ImageViewer
-                            key={index}
-                            src={image}
-                            alt={`Depois ${index + 1}`}
-                            className="w-full h-24 object-cover border rounded"
-                          />
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="w-full h-32 bg-gray-100 border rounded flex items-center justify-center text-gray-400 text-xs">
-                        Nenhuma imagem
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+          {data.activities.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <p>Nenhuma atividade adicionada</p>
             </div>
-          ))}
+          ) : (
+            data.activities.map((activity) => (
+              <div key={activity.id} className="mb-6 border border-gray-200 rounded-lg p-4">
+                <h4 className="text-md font-bold text-blue-600 mb-3">{activity.title}</h4>
+                
+                <div className="mb-4">
+                  <strong className="text-sm text-gray-700">Tarefas:</strong>
+                  <ul className="mt-2 space-y-1">
+                    {activity.tasks.filter(task => task.trim()).map((task, index) => (
+                      <li key={index} className="flex items-center space-x-2 text-sm">
+                        <Check className="h-4 w-4 text-green-600 flex-shrink-0" />
+                        <span>{task}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {(activity.beforeImages.length > 0 || activity.afterImages.length > 0) && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <strong className="text-sm text-gray-700 block mb-2">Antes:</strong>
+                      {activity.beforeImages.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-2">
+                          {activity.beforeImages.map((image, index) => (
+                            <ImageViewer
+                              key={index}
+                              src={image}
+                              alt={`Antes ${index + 1}`}
+                              className="w-full h-24 object-cover border rounded"
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="w-full h-32 bg-gray-100 border rounded flex items-center justify-center text-gray-400 text-xs">
+                          Nenhuma imagem
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <strong className="text-sm text-gray-700 block mb-2">Depois:</strong>
+                      {activity.afterImages.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-2">
+                          {activity.afterImages.map((image, index) => (
+                            <ImageViewer
+                              key={index}
+                              src={image}
+                              alt={`Depois ${index + 1}`}
+                              className="w-full h-24 object-cover border rounded"
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="w-full h-32 bg-gray-100 border rounded flex items-center justify-center text-gray-400 text-xs">
+                          Nenhuma imagem
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
         </div>
 
         {/* Manutenção Corretiva */}
@@ -210,13 +227,13 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
           {data.hasCorrective && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-3">
               <div>
-                <strong>Componente Substituído:</strong> {data.correctiveDetails.component}
+                <strong>Componente Substituído:</strong> {data.correctiveDetails.component || '_________________________________'}
               </div>
               <div>
-                <strong>Causa:</strong> {data.correctiveDetails.cause}
+                <strong>Causa:</strong> {data.correctiveDetails.cause || '_________________________________'}
               </div>
               <div>
-                <strong>Solução:</strong> {data.correctiveDetails.solution}
+                <strong>Solução:</strong> {data.correctiveDetails.solution || '_________________________________'}
               </div>
 
               {/* Fotos da Manutenção Corretiva */}
@@ -269,17 +286,17 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
           )}
         </div>
 
-        {/* Assinaturas - Apenas Técnicos */}
+        {/* Assinaturas Digitais */}
         <div className="mt-12 pt-8 border-t border-gray-300">
           <div className="grid grid-cols-2 gap-8">
-            <div className="text-center">
-              <div className="border-b border-gray-400 mb-2 pb-8"></div>
-              <p className="text-sm font-medium">Técnico Executante 1</p>
-            </div>
-            <div className="text-center">
-              <div className="border-b border-gray-400 mb-2 pb-8"></div>
-              <p className="text-sm font-medium">Técnico Executante 2</p>
-            </div>
+            <DigitalSignature 
+              name={tech1} 
+              title="Técnico Executante 1"
+            />
+            <DigitalSignature 
+              name={tech2} 
+              title="Técnico Executante 2"
+            />
           </div>
         </div>
 
