@@ -14,8 +14,8 @@ import { ReportData } from '@/types/report';
 
 const Index = () => {
   const [reportData, setReportData] = useState<ReportData>({
-    company: '',
-    date: new Date().toISOString().split('T')[0],
+    company: 'TSA',
+    date: '',
     location: '',
     technicians: '',
     team: '',
@@ -47,16 +47,17 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-lg">
-                <FileText className="h-6 w-6 text-white" />
+              <div className="bg-white p-2 rounded-lg">
+                <img 
+                  src="/lovable-uploads/a34f25bd-2b0d-4e89-83b3-be27078c393d.png" 
+                  alt="Logo TSA" 
+                  className="h-8 w-auto"
+                />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
                   Gerador de Relatórios de Manutenção
                 </h1>
-                <p className="text-sm text-gray-600">
-                  Crie relatórios profissionais de manutenção preventiva
-                </p>
               </div>
             </div>
             
