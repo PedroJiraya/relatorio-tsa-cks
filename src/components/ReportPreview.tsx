@@ -1,4 +1,3 @@
-
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,8 +28,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
         allowTaint: true,
         background: '#ffffff',
         width: reportRef.current.scrollWidth,
-        height: reportRef.current.scrollHeight,
-        scale: 2
+        height: reportRef.current.scrollHeight
       });
       
       const pdf = new jsPDF('p', 'mm', 'a4');
