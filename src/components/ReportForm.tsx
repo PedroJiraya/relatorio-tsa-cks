@@ -150,7 +150,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
     <div className="space-y-8">
       {/* Informações Básicas */}
       <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-        <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg">
+        <CardHeader className="bg-red-800 text-white rounded-t-lg">
           <CardTitle className="flex items-center space-x-2">
             <Calendar className="h-5 w-5" />
             <span>Informações Básicas</span>
@@ -279,7 +279,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
 
       {/* Componentes Padrão */}
       <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-        <CardHeader className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-t-lg">
+        <CardHeader className="bg-red-800 text-white rounded-t-lg">
           <CardTitle className="flex items-center space-x-2">
             <Plus className="h-5 w-5" />
             <span>Componentes Padrão</span>
@@ -308,7 +308,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
 
       {/* Gerenciamento de Componentes Customizados */}
       <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-        <CardHeader className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-t-lg">
+        <CardHeader className="bg-red-800 text-white rounded-t-lg">
           <CardTitle className="flex items-center space-x-2">
             <Plus className="h-5 w-5" />
             <span>Componente Personalizado</span>
@@ -371,7 +371,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
           
           {data.activities.map((activity) => (
             <Card key={activity.id} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-t-lg">
+              <CardHeader className="bg-red-800 text-white rounded-t-lg">
                 <CardTitle className="text-lg flex items-center justify-between">
                   <span>{activity.title}</span>
                   <Button
@@ -454,7 +454,7 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
 
       {/* Manutenção Corretiva */}
       <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-        <CardHeader className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-t-lg">
+        <CardHeader className="bg-red-800 text-white rounded-t-lg">
           <CardTitle>Manutenção Corretiva</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
