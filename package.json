@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://PedroJiraya.github.io/relatorio-tsa-cks",
+  "homepage": "https://pedrojiraya.github.io/relatorio-tsa-cks",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
