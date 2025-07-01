@@ -1,0 +1,28 @@
+name: Deploy para GitHub Pages
+on:
+  push:
+    branches:
+      - main
+permissions:
+  id-token: write
+  pages: write
+  contents: read
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Instalar dependências
+        run: npm install
+      - name: Construir
+        run: npm run build  # Substitua pelo comando de build do seu projeto
+      - name: Implantar
+        uses: actions/deploy-pages@v4
