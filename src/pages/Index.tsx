@@ -49,7 +49,7 @@ const Index = () => {
             <div className="flex items-center space-x-3">
               <div className="bg-white p-2 rounded-lg">
                 <img 
-                  src="/lovable-uploads/a34f25bd-2b0d-4e89-83b3-be27078c393d.png" 
+                  src={`${import.meta.env.BASE_URL}lovable-uploads/a34f25bd-2b0d-4e89-83b3-be27078c393d.png`}
                   alt="Logo TSA" 
                   className="h-8 w-auto"
                 />
