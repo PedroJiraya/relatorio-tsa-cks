@@ -100,7 +100,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
         <div className="text-center border-b-2 border-blue-600 pb-6 mb-8">
           <img
             className='w-20 '
-          src="/TSALOGO.png" alt="" />
+            src={`${import.meta.env.BASE_URL}TSALOGO.png`} alt="" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             RELATÓRIO DE MANUTENÇÃO PREVENTIVA
           </h1>
