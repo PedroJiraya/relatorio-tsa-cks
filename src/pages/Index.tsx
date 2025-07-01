@@ -50,7 +50,7 @@ const Index = () => {
             <div className="flex items-center space-x-3">
               <div className="bg-white p-2 rounded-lg">
                 <img 
-                  src={`${import.meta.env.BASE_URL}TSALOGO.png`}
+                  src={`${import.meta.env.BASE_URL}tsalog1.png`}
                   alt="Logo TSA" 
                   className="h-8 w-auto"
                 />
