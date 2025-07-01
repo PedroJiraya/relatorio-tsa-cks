@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -31,7 +30,9 @@ const Index = () => {
       solution: '',
       beforeImages: [],
       afterImages: []
-    }
+    },
+    hasPending: false,
+    pendingDetails: [],
   });
 
   const [currentView, setCurrentView] = useState<'form' | 'preview'>('form');
@@ -61,11 +62,11 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="flex space-x-3">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <Button
                 variant={currentView === 'form' ? 'default' : 'outline'}
                 onClick={() => setCurrentView('form')}
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-2 w-full sm:w-auto"
               >
                 <Upload className="h-4 w-4" />
                 <span>Formulário</span>
@@ -73,7 +74,7 @@ const Index = () => {
               <Button
                 variant={currentView === 'preview' ? 'default' : 'outline'}
                 onClick={() => setCurrentView('preview')}
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-2 w-full sm:w-auto"
               >
                 <Camera className="h-4 w-4" />
                 <span>Preview</span>

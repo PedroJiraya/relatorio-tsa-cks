@@ -1,4 +1,3 @@
-
 export interface Activity {
   id: string;
   title: string;
@@ -15,6 +14,12 @@ export interface CorrectiveDetails {
   afterImages: string[];
 }
 
+export interface PendingDetail {
+  description: string;
+  responsible: string;
+  deadline: string;
+}
+
 export interface ReportData {
   company: string;
   date: string;
@@ -28,4 +33,6 @@ export interface ReportData {
   activities: Activity[];
   hasCorrective: boolean;
   correctiveDetails: CorrectiveDetails;
+  hasPending: boolean;
+  pendingDetails: PendingDetail[];
 }

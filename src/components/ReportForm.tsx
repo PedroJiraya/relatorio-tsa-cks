@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -144,6 +143,28 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
   const removeComponent = (activityId: string) => {
     const updatedActivities = data.activities.filter(activity => activity.id !== activityId);
     onChange({ activities: updatedActivities });
+  };
+
+  // Adicionar funções para manipular pendências
+  const addPending = () => {
+    const newPending = {
+      description: '',
+      responsible: '',
+      deadline: '',
+    };
+    onChange({ pendingDetails: [...(Array.isArray(data.pendingDetails) ? data.pendingDetails : []), newPending], hasPending: true });
+  };
+
+  const removePending = (index: number) => {
+    const updated = [...(Array.isArray(data.pendingDetails) ? data.pendingDetails : [])];
+    updated.splice(index, 1);
+    onChange({ pendingDetails: updated, hasPending: updated.length > 0 });
+  };
+
+  const updatePending = (index: number, field: string, value: string) => {
+    const updated = [...(Array.isArray(data.pendingDetails) ? data.pendingDetails : [])];
+    updated[index][field] = value;
+    onChange({ pendingDetails: updated });
   };
 
   return (
@@ -556,6 +577,65 @@ const ReportForm = ({ data, onChange, onPreview }: ReportFormProps) => {
                     />
                   </div>
                 </div>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Pendências */}
+      <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+        <CardHeader className="bg-red-800 text-white rounded-t-lg">
+          <CardTitle>Pendências</CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="hasPending"
+                checked={!!data.hasPending}
+                onCheckedChange={(checked) => onChange({ hasPending: !!checked })}
+              />
+              <Label htmlFor="hasPending" className="text-sm font-medium">
+                Houve pendências?
+              </Label>
+              {data.hasPending && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addPending}
+                  className="ml-4 text-black border-red-600 hover:bg-yellow-100"
+                >
+                  + Adicionar 
+                </Button>
+              )}
+            </div>
+            {data.hasPending && Array.isArray(data.pendingDetails) && data.pendingDetails.length > 0 && (
+              <div className="space-y-6 mt-4">
+                {data.pendingDetails.map((pending, idx) => (
+                  <div key={idx} className="flex items-start gap-4 bg-yellow-50 rounded-lg border-l-4 border-red-800 p-4 relative">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removePending(idx)}
+                      className="absolute right-2 top-2 text-red-600 hover:text-red-800"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                    <div className="flex-1">
+                      <Label htmlFor={`pendingDescription${idx}`}>Descrição</Label>
+                      <Textarea
+                        id={`pendingDescription${idx}`}
+                        value={pending.description}
+                        onChange={e => updatePending(idx, 'description', e.target.value)}
+                        placeholder="Descreva a pendência..."
+                        className="border-red-800 focus:border-red-500"
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>

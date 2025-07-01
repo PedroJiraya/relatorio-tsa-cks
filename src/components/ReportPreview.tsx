@@ -17,12 +17,10 @@ interface ReportPreviewProps {
 const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
   const reportRef = useRef<HTMLDivElement>(null);
 
-  const generatePDF = async () => {
-    if (!reportRef.current) return;
-
+  // Função para gerar o PDF e retornar o blob
+  const generatePDFBlob = async () => {
+    if (!reportRef.current) return null;
     try {
-      toast.info('Gerando PDF... Aguarde um momento.');
-      
       const canvas = await html2canvas(reportRef.current, {
         useCORS: true,
         allowTaint: true,
@@ -30,32 +28,86 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
         width: reportRef.current.scrollWidth,
         height: reportRef.current.scrollHeight
       });
-      
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgWidth = 210;
       const pageHeight = 295;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       let heightLeft = imgHeight;
       let position = 0;
-
       pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
-
       while (heightLeft >= 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
         pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
       }
+      return pdf.output('blob');
+    } catch (error) {
+      toast.error('Erro ao gerar PDF. Tente novamente.');
+      return null;
+    }
+  };
 
-      const filename = `relatorio_manutencao_${data.date}_${data.location.replace(/\s+/g, '_') || 'local'}.pdf`;
+  // Função para baixar o PDF
+  const generatePDF = async () => {
+    if (!reportRef.current) return;
+    try {
+      toast.info('Gerando PDF... Aguarde um momento.');
+      const canvas = await html2canvas(reportRef.current, {
+        useCORS: true,
+        allowTaint: true,
+        background: '#ffffff',
+        width: reportRef.current.scrollWidth,
+        height: reportRef.current.scrollHeight
+      });
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      const filename = `relatorio_manutencao_${data.date}_${data.tague.replace(/\s+/g, '_') || 'tag'}.pdf`;
       pdf.save(filename);
-      
       toast.success('PDF gerado com sucesso!');
     } catch (error) {
       console.error('Erro ao gerar PDF:', error);
       toast.error('Erro ao gerar PDF. Tente novamente.');
     }
+  };
+
+  // Função para compartilhar no WhatsApp
+  const shareOnWhatsApp = async () => {
+    toast.info('Gerando PDF para compartilhar...');
+    const blob = await generatePDFBlob();
+    if (!blob) return;
+    const filename = `relatorio_manutencao_${data.date}_${data.tague.replace(/\s+/g, '_') || 'tag'}.pdf`;
+    const file = new File([blob], filename, { type: 'application/pdf' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: 'Relatório de Manutenção',
+          text: 'Segue o relatório de manutenção em PDF.'
+        });
+        toast.success('PDF compartilhado com sucesso!');
+        return;
+      } catch (e) {
+        toast.error('Compartilhamento cancelado ou não suportado.');
+      }
+    }
+    // Fallback: abrir WhatsApp Web com mensagem pronta
+    const url = `https://wa.me/?text=Segue%20o%20relat%C3%B3rio%20de%20manuten%C3%A7%C3%A3o.%20Anexe%20o%20PDF%20gerado%20pelo%20sistema.`;
+    window.open(url, '_blank');
+    toast('WhatsApp Web aberto. Anexe o PDF manualmente.');
   };
 
   const formatDate = (dateString: string) => {
@@ -75,7 +127,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
   return (
     <div className="space-y-6">
       {/* Header com controles */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 flex-wrap">
         <Button
           onClick={onBack}
           variant="outline"
@@ -84,14 +136,22 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
           <ArrowLeft className="h-4 w-4" />
           <span>Voltar ao Formulário</span>
         </Button>
-        
-        <Button
-          onClick={generatePDF}
-          className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white flex items-center space-x-2"
-        >
-          <Download className="h-4 w-4" />
-          <span>Baixar PDF</span>
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <Button
+            onClick={generatePDF}
+            className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white flex items-center space-x-2 w-full sm:w-auto"
+          >
+            <Download className="h-4 w-4" />
+            <span>Baixar PDF</span>
+          </Button>
+          <Button
+            onClick={shareOnWhatsApp}
+            className="bg-green-500 text-white flex items-center space-x-2 w-full sm:w-auto"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4"><path strokeLinecap="round" strokeLinejoin="round" d="M7.5 12h9m0 0l-3.75-3.75M16.5 12l-3.75 3.75" /><path fill="#25D366" d="M12 2C6.477 2 2 6.477 2 12c0 2.042.613 3.938 1.66 5.527L2 22l4.646-1.66A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z" /></svg>
+            <span>Enviar no WhatsApp</span>
+          </Button>
+        </div>
       </div>
 
       {/* Preview do Relatório */}
@@ -143,12 +203,12 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
           </h3>
           
           {data.activities.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-500 avoid-break">
               <p>Nenhuma atividade adicionada</p>
             </div>
           ) : (
             data.activities.map((activity) => (
-              <div key={activity.id} className="mb-6 border border-gray-200 rounded-lg p-4">
+              <div key={activity.id} className="mb-6 border border-gray-200 rounded-lg p-4 avoid-break">
                 <h4 className="text-md font-bold text-blue-600 mb-3">{activity.title}</h4>
                 
                 <div className="mb-4">
@@ -226,7 +286,7 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
           </div>
 
           {data.hasCorrective && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-3">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-3 avoid-break">
               <div>
                 <strong>Componente Substituído:</strong> {data.correctiveDetails.component || '_________________________________'}
               </div>
@@ -286,6 +346,24 @@ const ReportPreview = ({ data, onBack }: ReportPreviewProps) => {
             </div>
           )}
         </div>
+
+        {/* Pendências */}
+        {data.hasPending && Array.isArray(data.pendingDetails) && data.pendingDetails.length > 0 && (
+          <div className="mb-8 border border-red-600 rounded-lg p-4 bg-yellow-50 avoid-break">
+            <h4 className="text-md font-bold text-yellow-700 mb-3">PENDÊNCIAS</h4>
+            <div className="mb-4">
+              <strong className="text-sm text-gray-700">Itens:</strong>
+              <ul className="mt-2 space-y-1">
+                {data.pendingDetails.filter(p => p.description.trim()).map((pending, idx) => (
+                  <li key={idx} className="flex items-center space-x-2 text-sm">
+                    <X className="h-4 w-4 text-red-600 flex-shrink-0" />
+                    <span>{pending.description}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
 
         {/* Rodapé com nomes dos técnicos */}
         <div className="mt-12 pt-8 border-t border-gray-300">

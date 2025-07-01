@@ -40,3 +40,8 @@
 .read-the-docs {
   color: #888;
 }
+
+.avoid-break {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
